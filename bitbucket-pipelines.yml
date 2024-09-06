@@ -1,0 +1,28 @@
+image: atlassian/default-image:3
+
+pipelines:
+  default:
+    - parallel:
+        - step:
+            name: Build and Push Docker Image
+            script:
+              - docker build -t ${DOCKERHUB_USERNAME}/latihan-be-ci:latest .
+              - docker login --username ${DOCKERHUB_USERNAME} --password ${DOCKERHUB_PASSWORD}
+              - docker push ${DOCKERHUB_USERNAME}/latihan-be-ci:latest
+            services:
+              - docker
+            caches:
+              - docker
+        - step:
+            name : Deploy to EC2 AWS
+            script:
+              - pipe: atlassian/ssh-run:0.8.1
+                variables:
+                  SSH_USER: $EC2_USER
+                  SERVER: $EC2_HOST
+                  SSH_KEY : $SSH_KEY
+                  COMMAND: |
+                    docker pull image ${DOCKERHUB_USERNAME}/latihan-be-ci:latest
+                    docker stop training_ci_cd || true
+                    docker rm -f training_ci_cd || true
+                    docker run -d --name training_ci_cd ${DOCKERHUB_USERNAME}/latihan-be-ci:latest

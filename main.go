@@ -2,11 +2,17 @@ package main
 
 import (
 	"echo_basic/app"
+	"echo_basic/infra/config"
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
+	"log"
 )
 
 func main() {
+	conf, err := config.InitConfig()
+	if err != nil {
+		log.Println(err)
+	}
 	e := echo.New()
 
 	e.Use(
@@ -19,7 +25,7 @@ func main() {
 		}),
 	)
 
-	app.InitApp(e)
+	app.InitApp(e, conf)
 
 	e.Logger.Fatal(e.Start(":8000"))
 }

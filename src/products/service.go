@@ -2,15 +2,20 @@ package products
 
 import (
 	"context"
+	"echo_basic/infra/gemini"
 	"errors"
 	"github.com/google/uuid"
+	"log"
 )
 
 type Service struct {
+	gemini gemini.IService
 }
 
-func NewService() *Service {
-	return &Service{}
+func NewService(gemini gemini.IService) *Service {
+	return &Service{
+		gemini: gemini,
+	}
 }
 
 func (s *Service) GetListData(_ context.Context) []ProductEntity {
@@ -69,5 +74,13 @@ func (s *Service) DeleteDataByID(_ context.Context, id string) (err error) {
 	}
 
 	err = errors.New("not found")
+	return
+}
+
+func (s *Service) GetContent(ctx context.Context, content string) (res gemini.RespContent, err error) {
+	res, err = s.gemini.GenContent(ctx, content)
+	if err != nil {
+		log.Println(err)
+	}
 	return
 }

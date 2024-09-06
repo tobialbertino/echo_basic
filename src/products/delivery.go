@@ -98,3 +98,26 @@ func (d *Delivery) DeleteDataByID(c echo.Context) (err error) {
 	res.Message = utils.Success
 	return c.JSON(http.StatusOK, res)
 }
+
+func (d *Delivery) GetContent(c echo.Context) (err error) {
+	var res = utils.Response{}
+	var req ReqContent
+
+	err = c.Bind(&req)
+	if err != nil {
+		// log
+		err = echo.NewHTTPError(http.StatusBadRequest, err.Error())
+		return
+	}
+
+	content, err := d.Service.GetContent(c.Request().Context(), req.Content)
+	if err != nil {
+		// log
+		err = echo.NewHTTPError(http.StatusBadRequest, err.Error())
+		return
+	}
+
+	res.Message = utils.Success
+	res.Data = content
+	return c.JSON(http.StatusOK, res)
+}

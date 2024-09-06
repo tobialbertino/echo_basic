@@ -1,6 +1,8 @@
 package app
 
 import (
+	"echo_basic/infra/config"
+	"echo_basic/infra/gemini"
 	"echo_basic/src/fruits"
 	"echo_basic/src/products"
 	"echo_basic/src/users"
@@ -8,7 +10,10 @@ import (
 	"github.com/labstack/echo/v4"
 )
 
-func InitApp(e *echo.Echo) {
+func InitApp(e *echo.Echo, conf *config.AppConfig) {
+	//external Gemini
+	geminiService := gemini.NewService(conf)
+
 	// domain users
 	usersService := users.NewService()
 	usersDelivery := users.NewDelivery(usersService)
@@ -28,7 +33,7 @@ func InitApp(e *echo.Echo) {
 	fruitsRoutes.RegisterRoutes(e)
 
 	// domain products
-	productService := products.NewService()
+	productService := products.NewService(geminiService)
 	productDelivery := products.NewDelivery(productService)
 	productsRoutes := products.NewRoutes(productDelivery)
 	productsRoutes.RegisterRoutes(e)
