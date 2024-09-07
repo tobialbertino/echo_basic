@@ -3,9 +3,10 @@ package main
 import (
 	"echo_basic/app"
 	"echo_basic/infra/config"
+	"log"
+
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
-	"log"
 )
 
 func main() {
@@ -19,7 +20,7 @@ func main() {
 		middleware.Logger(),
 		middleware.Recover(),
 		middleware.CORSWithConfig(middleware.CORSConfig{
-			AllowOrigins: []string{"http://127.0.0.1:5173", "http://localhost:5173"},
+			AllowOrigins: []string{"*"},
 			AllowMethods: []string{echo.GET, echo.POST, echo.PUT, echo.DELETE},
 			AllowHeaders: []string{echo.HeaderOrigin, echo.HeaderContentType, echo.HeaderAccept},
 		}),
