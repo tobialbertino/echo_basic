@@ -1,6 +1,6 @@
 FROM golang:1.23.0-alpine3.20 as builder
 WORKDIR /app
-COPY . /app
+COPY . .
 RUN go build -o /app/main /app/main.go
 
 FROM alpine:3.20.2

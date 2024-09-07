@@ -7,4 +7,4 @@ Delivery -> Service -> Repository(if Exist)
 Import postman collection on folder ```./script/Simple.postman_collection.json```
 
 docker build -t go-be -f Dockerfile .
-docker run -p 8000:8000 --name be go-be
+docker run -d -p 8000:8000 --name be go-be

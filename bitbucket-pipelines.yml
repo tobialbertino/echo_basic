@@ -6,9 +6,9 @@ pipelines:
         name: Create .env file & Build and Push Docker Image
         script:
           - echo "GEMINI_API_KEY=${GEMINI_API_KEY}" >> .env
-          - docker build -t ${DOCKERHUB_USERNAME}/latihan-be-ci:1.0.0 .
+          - docker build -t ${DOCKERHUB_USERNAME}/products-be-ci:1.0.0 .
           - docker login --username ${DOCKERHUB_USERNAME} --password ${DOCKERHUB_PASSWORD}
-          - docker push ${DOCKERHUB_USERNAME}/latihan-be-ci:1.0.0
+          - docker push ${DOCKERHUB_USERNAME}/products-be-ci:1.0.0
         services:
           - docker
         caches:
@@ -22,7 +22,7 @@ pipelines:
               SERVER: $EC2_HOST
               SSH_KEY : $SSH_KEY
               COMMAND: |
-                docker pull image ${DOCKERHUB_USERNAME}/latihan-be-ci:1.0.0
+                docker pull image ${DOCKERHUB_USERNAME}/products-be-ci:1.0.0
                 docker stop be-products || true
                 docker rm -f be-products || true
-                docker run -d --name be-products -p 8000:8000 ${DOCKERHUB_USERNAME}/latihan-be-ci:1.0.0
+                docker run -d --name be-products -p 8000:8000 ${DOCKERHUB_USERNAME}/products-be-ci:1.0.0
